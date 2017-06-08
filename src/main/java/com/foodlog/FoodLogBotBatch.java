@@ -43,6 +43,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 			}
 		} catch (Exception ex){
 			System.out.println("errroooooooooooooooooooooooooooooooooooooooooo: " + ex.getMessage());
+			ex.printStackTrace();
 		}
 
 
