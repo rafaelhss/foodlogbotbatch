@@ -7,10 +7,12 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>1.5.3.RELEASE</version>
 	</parent>
-	<artifactId>spring-boot-sample-simple</artifactId>
-	<name>Spring Boot Simple Sample</name>
-	<description>Spring Boot Simple Sample</description>
-	<url>http://projects.spring.io/spring-boot/</url>
+	<artifactId>foodlogbotbatch</artifactId>
+	<name>FoodLogBot Batch</name>
+	<description>Batch for FoodLogBot</description>
+	<version>1.0.0</version>
+
+
 	<organization>
 		<name>Pivotal Software, Inc.</name>
 		<url>http://www.spring.io</url>
