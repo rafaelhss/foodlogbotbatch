@@ -18,6 +18,7 @@ package com.foodlog;
 
 import com.foodlog.scheduledmeal.ScheduledMeal;
 import com.foodlog.scheduledmeal.ScheduledMealRepository;
+import com.foodlog.sender.Sender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -26,6 +27,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FoodLogBotBatch implements CommandLineRunner {
 
+	private static final String BOT_ID = "374481790:AAHgscpBDG2zs4VsDbeg140VmSVZZeItPEw";
 
 
 	@Autowired
@@ -36,8 +38,11 @@ public class FoodLogBotBatch implements CommandLineRunner {
 		for(ScheduledMeal scheduledMeal :   scheduledMealRepository.findAll()){
 			System.out.println(scheduledMeal.getName());
 			System.out.println(scheduledMeal.getTarget_time());
+			new Sender(BOT_ID).sendResponse(153350155, scheduledMeal.getName());
 		}
+
 		System.out.println("samba");
+		new Sender(BOT_ID).sendResponse(153350155, "samba");
 
 	}
 
