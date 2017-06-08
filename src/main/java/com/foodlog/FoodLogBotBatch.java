@@ -35,11 +35,16 @@ public class FoodLogBotBatch implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		for(ScheduledMeal scheduledMeal :   scheduledMealRepository.findAll()){
-			System.out.println(scheduledMeal.getName());
-			System.out.println(scheduledMeal.getTarget_time());
-			new Sender(BOT_ID).sendResponse(153350155, scheduledMeal.getName());
+		try {
+			for (ScheduledMeal scheduledMeal : scheduledMealRepository.findAll()) {
+				System.out.println(scheduledMeal.getName());
+				System.out.println(scheduledMeal.getTarget_time());
+				new Sender(BOT_ID).sendResponse(153350155, scheduledMeal.getName());
+			}
+		} catch (Exception ex){
+			System.out.println("errroooooooooooooooooooooooooooooooooooooooooo: " + ex.getMessage());
 		}
+
 
 		System.out.println("samba");
 		new Sender(BOT_ID).sendResponse(153350155, "samba");
