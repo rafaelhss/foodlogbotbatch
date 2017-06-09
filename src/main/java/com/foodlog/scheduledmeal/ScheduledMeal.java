@@ -1,12 +1,8 @@
 package com.foodlog.scheduledmeal;
 
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -31,9 +27,12 @@ public class ScheduledMeal implements Serializable {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "target_time")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date target_time;
+    @NotNull
+    @Column(name = "target_time", nullable = false)
+    private String targetTime;
+
+    @ManyToOne
+    private Client client;
 
     public Long getId() {
         return id;
@@ -69,17 +68,30 @@ public class ScheduledMeal implements Serializable {
         this.description = description;
     }
 
-    public Date getTarget_time() {
-        return target_time;
+    public String getTargetTime() {
+        return targetTime;
     }
 
-    public ScheduledMeal target_time(Date target_time) {
-        this.target_time = target_time;
+    public ScheduledMeal target_time(String target_time) {
+        this.targetTime = target_time;
         return this;
     }
 
-    public void setTarget_time(Date target_time) {
-        this.target_time = target_time;
+    public void setTargetTime(String targetTime) {
+        this.targetTime = targetTime;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public ScheduledMeal client(Client client) {
+        this.client = client;
+        return this;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     @Override
@@ -105,10 +117,10 @@ public class ScheduledMeal implements Serializable {
     @Override
     public String toString() {
         return "ScheduledMeal{" +
-            "id=" + getId() +
-            ", name='" + getName() + "'" +
-            ", description='" + getDescription() + "'" +
-            ", target_time='" + getTarget_time() + "'" +
-            "}";
+                "id=" + getId() +
+                ", name='" + getName() + "'" +
+                ", description='" + getDescription() + "'" +
+                ", targetTime='" + getTargetTime() + "'" +
+                "}";
     }
 }
