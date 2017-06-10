@@ -34,8 +34,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-
+import java.util.TimeZone;
 
 
 @SpringBootApplication
@@ -89,8 +88,12 @@ public class FoodLogBotBatch implements CommandLineRunner {
 		return cal.getTime();
 	}
 	private boolean checkTime(ScheduledMeal scheduledMeal) throws ParseException {
-		DateFormat formatter = new SimpleDateFormat("HH:mm");
-		Time target = new Time(formatter.parse(scheduledMeal.getTargetTime()).getTime());
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+
+		dateFormat.setTimeZone(TimeZone.getTimeZone("America/Brasilia"));
+
+
+		Time target = new Time(dateFormat.parse(scheduledMeal.getTargetTime()).getTime());
 
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(target);
