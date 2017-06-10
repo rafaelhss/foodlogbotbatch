@@ -32,6 +32,10 @@ import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.TemporalUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -87,7 +91,36 @@ public class FoodLogBotBatch implements CommandLineRunner {
 		cal.add(Calendar.DATE, -1);
 		return cal.getTime();
 	}
+
 	private boolean checkTime(ScheduledMeal scheduledMeal) throws ParseException {
+
+		String time[] = scheduledMeal.getTargetTime().split(":");
+
+		ZonedDateTime now = ZonedDateTime.now(ZoneId.of("America/Brasilia"));
+		ZonedDateTime target = now.with(LocalTime.of(16, 0));
+
+		ZonedDateTime after = target.plusMinutes(20);
+		ZonedDateTime before = target.minusMinutes(20);
+
+		System.out.println("datas:");
+		System.out.println(now);
+		System.out.println(target);
+		System.out.println(before);
+		System.out.println(after);
+
+		if(now.isBefore(after) && now.isAfter(before)){
+			System.out.println("2@@@@@@@@@@@@@@@@@@xsjbchbcz  eh nois");
+		}
+
+
+
+
+		return true;
+
+	}
+
+
+	private boolean checkTime2(ScheduledMeal scheduledMeal) throws ParseException {
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
 
 		dateFormat.setTimeZone(TimeZone.getTimeZone("America/Brasilia"));
