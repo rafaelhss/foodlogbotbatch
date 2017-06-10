@@ -97,7 +97,10 @@ public class FoodLogBotBatch implements CommandLineRunner {
 		String time[] = scheduledMeal.getTargetTime().split(":");
 
 		ZonedDateTime now = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
-		ZonedDateTime target = now.with(LocalTime.of(16, 0));
+
+		int hour = Integer.parseInt(time[0]);
+		int minute = Integer.parseInt(time[1]);
+		ZonedDateTime target = now.with(LocalTime.of(hour, minute));
 
 		ZonedDateTime after = target.plusMinutes(20);
 		ZonedDateTime before = target.minusMinutes(20);
