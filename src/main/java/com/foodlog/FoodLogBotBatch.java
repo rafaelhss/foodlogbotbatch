@@ -95,7 +95,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 
 		Time target = new Time(dateFormat.parse(scheduledMeal.getTargetTime()).getTime());
 
-		Calendar cal = Calendar.getInstance();
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/Brasilia"));
 		cal.setTime(target);
 		cal.add(Calendar.MINUTE, 20);
 		Time after = new Time(cal.getTimeInMillis());
@@ -103,6 +103,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 		cal.setTime(target);
 		cal.add(Calendar.MINUTE, -20);
 		Time before = new Time(cal.getTimeInMillis());
+
 
 
 		//if(new Date().after(new Date(before.getTime())) && new Date().before(new Date(after.getTime()))){
