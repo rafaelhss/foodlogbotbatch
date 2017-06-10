@@ -113,6 +113,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 
 	public int compareTimes(Date d1, Date d2)
 	{
+		System.out.println("comparando: " + d1 + "     e     " + d2);
 		DateTimeComparator comparator = DateTimeComparator.getTimeOnlyInstance();
 		return comparator.compare(d1, d2);
 	}
