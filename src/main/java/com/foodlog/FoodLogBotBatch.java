@@ -52,7 +52,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		System.out.println("########## here we gooooooo  ");
+		System.out.println("########## here we gooooooo  :" + new Date());
 
 		sentMessageRepository.deleteBySentDateBefore(yesterday());
 
