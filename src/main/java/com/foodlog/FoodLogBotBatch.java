@@ -56,6 +56,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 		sentMessageRepository.deleteBySentDateBefore(yesterday());
 
 		try {
+			System.out.println("########## here we gooooooo  ");
 			for (ScheduledMeal scheduledMeal : scheduledMealRepository.findAll()) {
 
 				if(checkTime(scheduledMeal)) {
