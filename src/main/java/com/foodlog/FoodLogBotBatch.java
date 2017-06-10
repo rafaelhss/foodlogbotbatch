@@ -112,13 +112,13 @@ public class FoodLogBotBatch implements CommandLineRunner {
 		System.out.println(after);
 
 		if(now.isBefore(after) && now.isAfter(before)){
-			System.out.println("2@@@@@@@@@@@@@@@@@@xsjbchbcz  eh nois");
+			return true;
 		}
 
 
 
 
-		return true;
+		return false;
 
 	}
 
