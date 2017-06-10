@@ -104,11 +104,13 @@ public class FoodLogBotBatch implements CommandLineRunner {
 		cal.add(Calendar.MINUTE, -20);
 		Time before = new Time(cal.getTimeInMillis());
 
+		cal.setTime(new Date());
+		Time now = new Time(cal.getTimeInMillis());
 
 
 		//if(new Date().after(new Date(before.getTime())) && new Date().before(new Date(after.getTime()))){
-		if(compareTimes(new Date(),new Date(before.getTime())) > 0 &&
-                compareTimes(new Date(),new Date(after.getTime())) < 0){
+		if(compareTimes(new Date(now.getTime()),new Date(before.getTime())) > 0 &&
+                compareTimes(new Date(now.getTime()),new Date(after.getTime())) < 0){
             System.out.println("Eh nois");
             return true;
         }
