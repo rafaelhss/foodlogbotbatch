@@ -52,11 +52,11 @@ public class FoodLogBotBatch implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
+		System.out.println("########## here we gooooooo  ");
 
 		sentMessageRepository.deleteBySentDateBefore(yesterday());
 
 		try {
-			System.out.println("########## here we gooooooo  ");
 			for (ScheduledMeal scheduledMeal : scheduledMealRepository.findAll()) {
 
 				if(checkTime(scheduledMeal)) {
@@ -77,7 +77,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 				}
 			}
 		} catch (Exception ex){
-			System.out.println("errroooooooooooooooooooooooooooooooooooooooooo: " + ex.getMessage());
+			System.out.println("errrxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: " + ex.getMessage());
 			ex.printStackTrace();
 		}
 
