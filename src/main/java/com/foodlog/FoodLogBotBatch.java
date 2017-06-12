@@ -33,10 +33,13 @@ import java.sql.Time;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.temporal.TemporalUnit;
 import java.util.Calendar;
 import java.util.Date;
-
-
+import java.util.TimeZone;
 
 
 @SpringBootApplication
@@ -54,6 +57,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 	@Override
 	@Transactional
 	public void run(String... args) {
+		System.out.println("########## here we gooooooo  :" + new Date());
 
 		sentMessageRepository.deleteBySentDateBefore(yesterday());
 
@@ -78,7 +82,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 				}
 			}
 		} catch (Exception ex){
-			System.out.println("errroooooooooooooooooooooooooooooooooooooooooo: " + ex.getMessage());
+			System.out.println("errrxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx: " + ex.getMessage());
 			ex.printStackTrace();
 		}
 
@@ -89,11 +93,47 @@ public class FoodLogBotBatch implements CommandLineRunner {
 		cal.add(Calendar.DATE, -1);
 		return cal.getTime();
 	}
-	private boolean checkTime(ScheduledMeal scheduledMeal) throws ParseException {
-		DateFormat formatter = new SimpleDateFormat("HH:mm");
-		Time target = new Time(formatter.parse(scheduledMeal.getTargetTime()).getTime());
 
-		Calendar cal = Calendar.getInstance();
+	private boolean checkTime(ScheduledMeal scheduledMeal) throws ParseException {
+
+		String time[] = scheduledMeal.getTargetTime().split(":");
+
+		ZonedDateTime now = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo"));
+
+		int hour = Integer.parseInt(time[0]);
+		int minute = Integer.parseInt(time[1]);
+		ZonedDateTime target = now.with(LocalTime.of(hour, minute));
+
+		ZonedDateTime after = target.plusMinutes(20);
+		ZonedDateTime before = target.minusMinutes(20);
+
+		System.out.println("datas:");
+		System.out.println(now);
+		System.out.println(target);
+		System.out.println(before);
+		System.out.println(after);
+
+		if(now.isBefore(after) && now.isAfter(before)){
+			return true;
+		}
+
+
+
+
+		return false;
+
+	}
+
+
+	private boolean checkTime2(ScheduledMeal scheduledMeal) throws ParseException {
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm");
+
+		dateFormat.setTimeZone(TimeZone.getTimeZone("America/Brasilia"));
+
+
+		Time target = new Time(dateFormat.parse(scheduledMeal.getTargetTime()).getTime());
+
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("America/Brasilia"));
 		cal.setTime(target);
 		cal.add(Calendar.MINUTE, 20);
 		Time after = new Time(cal.getTimeInMillis());
@@ -102,10 +142,13 @@ public class FoodLogBotBatch implements CommandLineRunner {
 		cal.add(Calendar.MINUTE, -20);
 		Time before = new Time(cal.getTimeInMillis());
 
+		cal.setTime(new Date());
+		Time now = new Time(cal.getTimeInMillis());
+
 
 		//if(new Date().after(new Date(before.getTime())) && new Date().before(new Date(after.getTime()))){
-		if(compareTimes(new Date(),new Date(before.getTime())) > 0 &&
-                compareTimes(new Date(),new Date(after.getTime())) < 0){
+		if(compareTimes(new Date(now.getTime()),new Date(before.getTime())) > 0 &&
+                compareTimes(new Date(now.getTime()),new Date(after.getTime())) < 0){
             System.out.println("Eh nois");
             return true;
         }
@@ -114,6 +157,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 
 	public int compareTimes(Date d1, Date d2)
 	{
+		System.out.println("comparando: " + d1 + "     e     " + d2);
 		DateTimeComparator comparator = DateTimeComparator.getTimeOnlyInstance();
 		return comparator.compare(d1, d2);
 	}

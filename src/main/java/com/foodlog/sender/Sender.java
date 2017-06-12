@@ -24,8 +24,8 @@ public class Sender {
             System.out.println(url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            //BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            System.out.println("ATENCAO...  NAO ESTA MANDANDO!!!!");
+            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            //System.out.println("ATENCAO...  NAO ESTA MANDANDO!!!!");
         } catch (Exception ex){
             ex.printStackTrace();
         }
