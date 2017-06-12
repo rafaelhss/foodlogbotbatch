@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.sql.Time;
@@ -51,6 +52,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 	SentMessageRepository sentMessageRepository;
 
 	@Override
+	@Transactional
 	public void run(String... args) {
 
 		sentMessageRepository.deleteBySentDateBefore(yesterday());
