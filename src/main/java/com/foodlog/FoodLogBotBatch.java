@@ -45,8 +45,7 @@ import java.util.TimeZone;
 @SpringBootApplication
 public class FoodLogBotBatch implements CommandLineRunner {
 
-	private static final String BOT_ID = "374481790:AAHgscpBDG2zs4VsDbeg140VmSVZZeItPEw";
-
+	private static final String BOT_ID = "380968235:AAGqnrSERR8ABcw-_avcPN2ES3KH5SeZtNM";
 
 	@Autowired
 	ScheduledMealRepository scheduledMealRepository;
