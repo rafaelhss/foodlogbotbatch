@@ -13,5 +13,8 @@ import java.util.Date;
 @Repository
 public interface SentMessageRepository extends JpaRepository<SentMessage,Long> {
     public void deleteBySentDateBefore(Date yesterday);
+    public void deleteByMessageType(String messageType);
     public SentMessage findBySentId(Long sentId);
+    public SentMessage findBySentIdAndMessageType(Long sentId, String messageType);
+
 }
