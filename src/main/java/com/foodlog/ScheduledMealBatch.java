@@ -41,19 +41,24 @@ public class ScheduledMealBatch {
         try {
             for (ScheduledMeal scheduledMeal : scheduledMealRepository.findAll()) {
 
+                System.out.println("Verificando:" + scheduledMeal.getName() + "(" + scheduledMeal.getTargetTime() + ")");
                 if(checkTime(scheduledMeal)) {
 
-                    if(sentMessageRepository.findBySentId(scheduledMeal.getId()) == null) {
+                    SentMessage sentMessage = sentMessageRepository.findBySentId(scheduledMeal.getId());
+
+                    if(sentMessage == null) {
 
                         new Sender(BatchConfigs.BOT_ID).sendResponse(153350155, scheduledMeal.getName()
                                 + "(" + scheduledMeal.getTargetTime() + "):   "
                                 + scheduledMeal.getDescription());
 
                         //Log Message
-                        SentMessage sentMessage = new SentMessage();
+                        sentMessage = new SentMessage();
                         sentMessage.setSentDate(new Date());
                         sentMessage.setSentId(scheduledMeal.getId());
                         sentMessageRepository.save(sentMessage);
+                    } else {
+                        System.out.println("Não vou mandar mensagem apesar de estarmos na janela. ja mandei: " + sentMessage.getSentId() + " - " + sentMessage.getSentId() + " em " + sentMessage.getSentDate());
                     }
 
                 }
@@ -83,21 +88,9 @@ public class ScheduledMealBatch {
         ZonedDateTime after = target.plusMinutes(20);
         ZonedDateTime before = target.minusMinutes(20);
 
-        System.out.println("datas:");
-        System.out.println(now);
-        System.out.println(target);
-        System.out.println(before);
-        System.out.println(after);
+        System.out.println("datas: now[" + now + "] target[" + target + "] before[" + before+"] after[" + after + "] Return:" + (now.isBefore(after) && now.isAfter(before)));
 
-        if(now.isBefore(after) && now.isAfter(before)){
-            return true;
-        }
-
-
-
-
-        return false;
-
+        return (now.isBefore(after) && now.isAfter(before));
     }
 
 
