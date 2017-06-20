@@ -36,7 +36,9 @@ public class ScheduledMealBatch {
     public void run(){
         System.out.println("########## here we gooooooo  :" + new Date());
 
-        sentMessageRepository.deleteBySentDateBefore(yesterday());
+        final Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.HOUR, -2);
+        sentMessageRepository.deleteBySentDateBefore(cal.getTime());
 
         try {
             for (ScheduledMeal scheduledMeal : scheduledMealRepository.findAll()) {
@@ -68,11 +70,6 @@ public class ScheduledMealBatch {
             ex.printStackTrace();
         }
 
-    }
-    private Date yesterday() {
-        final Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        return cal.getTime();
     }
 
     private boolean checkTime(ScheduledMeal scheduledMeal) throws ParseException {
