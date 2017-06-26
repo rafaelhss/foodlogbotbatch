@@ -31,12 +31,16 @@ public class FoodLogBotBatch implements CommandLineRunner {
 	public ScheduledMealBatch scheduledMealBatch;
 	@Autowired
 	public ReportElapsedMealTimeBatch reportElapsedMealTimeBatch;
+	@Autowired
+	public ReportTargetMissBatch reportTargetMissBatch;
+
 
 	@Override
 	@Transactional
 	public void run(String... args) {
 		scheduledMealBatch.run();
 		reportElapsedMealTimeBatch.run();
+		reportTargetMissBatch.run();
 	}
 
 
