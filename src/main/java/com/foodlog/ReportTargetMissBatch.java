@@ -40,7 +40,7 @@ public class ReportTargetMissBatch {
         //TODO rever esse controle de mensages enviada
         SendTargetMissDayReport();
 
-        if(sentMessageRepository.findBySentIdAndMessageType(Instant.now().getLong(ChronoField.DAY_OF_YEAR), MSGTYPE) == null) {
+        if(sentMessageRepository.findBySentIdAndMessageType(LocalDate.now().getLong(ChronoField.DAY_OF_YEAR), MSGTYPE) == null) {
             System.out.println("Vou mandar msg: " + Instant.now().getLong(ChronoField.DAY_OF_YEAR));
 
             //Log Message
