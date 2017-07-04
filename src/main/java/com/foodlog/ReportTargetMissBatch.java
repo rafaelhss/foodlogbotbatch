@@ -39,24 +39,32 @@ public class ReportTargetMissBatch {
 
         //TODO rever esse controle de mensages enviada
 
+        if(isTimeToSendReport()){
+            if(sentMessageRepository.findBySentIdAndMessageType(LocalDate.now().getLong(ChronoField.DAY_OF_YEAR), MSGTYPE) == null) {
+                System.out.println("Vou mandar msg: " + LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
+                SendTargetMissDayReport();
 
+                //Log Message
+                SentMessage sentMessage = new SentMessage();
+                sentMessage.setSentDate(new Date());
+                sentMessage.setMessageType(MSGTYPE);
+                sentMessage.setSentId(LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
 
-        if(sentMessageRepository.findBySentIdAndMessageType(LocalDate.now().getLong(ChronoField.DAY_OF_YEAR), MSGTYPE) == null) {
-            System.out.println("Vou mandar msg: " + LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
-            SendTargetMissDayReport();
+                sentMessageRepository.deleteByMessageType(MSGTYPE);
+                sentMessageRepository.save(sentMessage);
 
-            //Log Message
-            SentMessage sentMessage = new SentMessage();
-            sentMessage.setSentDate(new Date());
-            sentMessage.setMessageType(MSGTYPE);
-            sentMessage.setSentId(LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
-
-            sentMessageRepository.deleteByMessageType(MSGTYPE);
-            sentMessageRepository.save(sentMessage);
-
+            } else {
+                System.out.println("Ja mandei mensagem do dia. nada farei. Id:" + LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
+            }
         } else {
-            System.out.println("Ja mandei mensagem do dia. nada farei. Id:" + LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
+            System.out.println("It is not time yet");
         }
+    }
+
+    private boolean isTimeToSendReport() {
+        MealLog mealLog = mealLogRepository.findTop1ByOrderByMealDateTimeDesc();
+        long elapsedMealTime = Duration.between(mealLog.getMealDateTime(), Instant.now()).getSeconds() / (60 * 60);
+        return elapsedMealTime > BatchConfigs.SLEEP_INTERVAL;
     }
 
     public void SendTargetMissDayReport() {
