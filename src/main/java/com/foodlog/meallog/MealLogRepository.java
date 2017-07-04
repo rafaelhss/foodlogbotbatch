@@ -18,5 +18,5 @@ import java.util.List;
 @Repository
 public interface MealLogRepository extends JpaRepository<MealLog,Long> {
     MealLog findTop1ByOrderByMealDateTimeDesc();
-    List<MealLog> findByMealDateTimeBetween(Instant today, Instant tomorrow);
+    List<MealLog> findByMealDateTimeBetweenOrderByMealDateTimeDesc(Instant today, Instant tomorrow);
 }

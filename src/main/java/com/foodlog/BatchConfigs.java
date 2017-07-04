@@ -5,4 +5,5 @@ package com.foodlog;
  */
 public class BatchConfigs {
     public static final String BOT_ID = "380968235:AAGqnrSERR8ABcw-_avcPN2ES3KH5SeZtNM";
+    public static final long SLEEP_INTERVAL = 6;
 }

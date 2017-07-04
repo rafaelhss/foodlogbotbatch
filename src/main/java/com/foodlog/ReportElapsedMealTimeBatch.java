@@ -38,6 +38,7 @@ public class ReportElapsedMealTimeBatch {
         System.out.println(mealLog.getMealDateTime());
         System.out.println(Instant.now());
 
+        // ElapsedMealTime eh sempre um numero redondo. A segunda condição evita que envie mensagem duplicada.
         if(elapsedMealTime >= 3 && sentMessageRepository.findBySentIdAndMessageType(elapsedMealTime, MSGTYPE) == null){
             message = "Hora de comer! Sua ultima refeição ";
 

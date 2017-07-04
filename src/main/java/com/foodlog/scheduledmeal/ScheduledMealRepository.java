@@ -13,6 +13,5 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Repository
 public interface ScheduledMealRepository extends JpaRepository<ScheduledMeal,Long> {
-    public List<ScheduledMeal> findDistinctTargetTimeBy();
 
 }
