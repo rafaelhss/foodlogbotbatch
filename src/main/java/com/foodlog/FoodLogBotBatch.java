@@ -23,6 +23,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoField;
+
 
 @SpringBootApplication
 public class FoodLogBotBatch implements CommandLineRunner {
@@ -38,9 +41,10 @@ public class FoodLogBotBatch implements CommandLineRunner {
 	@Override
 	@Transactional
 	public void run(String... args) {
-		scheduledMealBatch.run();
+		/*scheduledMealBatch.run();
 		reportElapsedMealTimeBatch.run();
-		reportTargetMissBatch.run();
+		reportTargetMissBatch.run();*/
+		System.out.println("oiwww:" + LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
 	}
 
 

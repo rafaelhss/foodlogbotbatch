@@ -38,7 +38,9 @@ public class ReportTargetMissBatch {
     public void run() {
 
         //TODO rever esse controle de mensages enviada
+
         SendTargetMissDayReport();
+
 
         if(sentMessageRepository.findBySentIdAndMessageType(LocalDate.now().getLong(ChronoField.DAY_OF_YEAR), MSGTYPE) == null) {
             System.out.println("Vou mandar msg: " + Instant.now().getLong(ChronoField.DAY_OF_YEAR));
@@ -47,7 +49,7 @@ public class ReportTargetMissBatch {
             SentMessage sentMessage = new SentMessage();
             sentMessage.setSentDate(new Date());
             sentMessage.setMessageType(MSGTYPE);
-            sentMessage.setSentId(Instant.now().getLong(ChronoField.DAY_OF_YEAR));
+            sentMessage.setSentId(LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
 
             sentMessageRepository.deleteByMessageType(MSGTYPE);
             sentMessageRepository.save(sentMessage);
