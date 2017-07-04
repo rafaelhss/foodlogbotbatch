@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fc8acaf9-4669-4832-b383-147d464f8760" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/foodlog/ReportTargetMissBatch.java" afterPath="$PROJECT_DIR$/src/main/java/com/foodlog/ReportTargetMissBatch.java" />
     </list>
     <ignored path="$PROJECT_DIR$/../../target/" />
@@ -23,8 +22,8 @@
       <file leaf-file-name="ReportTargetMissBatch.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/foodlog/ReportTargetMissBatch.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="57" column="87" lean-forward="false" selection-start-line="57" selection-start-column="87" selection-end-line="57" selection-end-column="87" />
+            <state relative-caret-position="330">
+              <caret line="46" column="0" lean-forward="true" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -841,8 +840,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/foodlog/ReportTargetMissBatch.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="57" column="87" lean-forward="false" selection-start-line="57" selection-start-column="87" selection-end-line="57" selection-end-column="87" />
+        <state relative-caret-position="330">
+          <caret line="46" column="0" lean-forward="true" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
