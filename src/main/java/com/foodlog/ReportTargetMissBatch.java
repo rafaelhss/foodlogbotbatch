@@ -10,6 +10,10 @@ import com.foodlog.sender.sentmessage.SentMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.*;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
@@ -120,7 +124,17 @@ public class ReportTargetMissBatch {
 
         System.out.println(message);
 
-        new Sender(BatchConfigs.BOT_ID).sendResponse(153350155, message);
+        try {
+            new Sender(BatchConfigs.BOT_ID).sendResponse(153350155, message);
+
+            //chama o image report para mandar o peso
+            HttpURLConnection conn = (HttpURLConnection) new URL("https://foodlogbotimagebatch.herokuapp.com/timeline").openConnection();
+            conn.setRequestMethod("GET");
+            BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     private int getScheduledMeals() {
