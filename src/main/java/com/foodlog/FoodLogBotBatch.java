@@ -38,9 +38,48 @@ public class FoodLogBotBatch implements CommandLineRunner {
 	@Override
 	@Transactional
 	public void run(String... args) {
+
+
+		System.out.println("########## Start scheduledMealBatch");
+		System.out.println("########## Start scheduledMealBatch");
+		System.out.println("########## Start scheduledMealBatch");
+		System.out.println("########## Start scheduledMealBatch");
+
 		scheduledMealBatch.run();
+
+		System.out.println("########## End scheduledMealBatch");
+		System.out.println("########## End scheduledMealBatch");
+		System.out.println("########## End scheduledMealBatch");
+		System.out.println("########## End scheduledMealBatch");
+
+		System.out.println("");
+
+		System.out.println("########## Start reportElapsedMealTimeBatch");
+		System.out.println("########## Start reportElapsedMealTimeBatch");
+		System.out.println("########## Start reportElapsedMealTimeBatch");
+		System.out.println("########## Start reportElapsedMealTimeBatch");
+
 		reportElapsedMealTimeBatch.run();
+
+		System.out.println("########## End reportElapsedMealTimeBatch");
+		System.out.println("########## End reportElapsedMealTimeBatch");
+		System.out.println("########## End reportElapsedMealTimeBatch");
+		System.out.println("########## End reportElapsedMealTimeBatch");
+
+		System.out.println("");
+
+		System.out.println("########## Start reportTargetMissBatch");
+		System.out.println("########## Start reportTargetMissBatch");
+		System.out.println("########## Start reportTargetMissBatch");
+		System.out.println("########## Start reportTargetMissBatch");
+
 		reportTargetMissBatch.run();
+
+
+		System.out.println("########## End reportTargetMissBatch");
+		System.out.println("########## End reportTargetMissBatch");
+		System.out.println("########## End reportTargetMissBatch");
+		System.out.println("########## End reportTargetMissBatch");
 	}
 
 

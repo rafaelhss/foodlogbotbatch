@@ -69,7 +69,10 @@ public class ReportElapsedMealTimeBatch {
             sentMessageRepository.save(sentMessage);
 
         } else {
-            message = "ta de boa";
+            message = "ta de boa: elapsedMealTime >= 3 (" +
+                    (elapsedMealTime >= 3) + ")" +
+                    "sentMessageRepository.findBySentIdAndMessageType(elapsedMealTime, MSGTYPE) == null" +
+                    (sentMessageRepository.findBySentIdAndMessageType(elapsedMealTime, MSGTYPE) == null);
         }
 
         System.out.println(message);
