@@ -46,16 +46,17 @@ public class ReportTargetMissBatch {
         if(isTimeToSendReport()){
             if(sentMessageRepository.findBySentIdAndMessageType(LocalDate.now().getLong(ChronoField.DAY_OF_YEAR), MSGTYPE) == null) {
                 System.out.println("Vou mandar msg: " + LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
-                SendTargetMissDayReport();
+                if(SendTargetMissDayReport()) {
 
-                //Log Message
-                SentMessage sentMessage = new SentMessage();
-                sentMessage.setSentDate(new Date());
-                sentMessage.setMessageType(MSGTYPE);
-                sentMessage.setSentId(LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
+                    //Log Message
+                    SentMessage sentMessage = new SentMessage();
+                    sentMessage.setSentDate(new Date());
+                    sentMessage.setMessageType(MSGTYPE);
+                    sentMessage.setSentId(LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
 
-                sentMessageRepository.deleteByMessageType(MSGTYPE);
-                sentMessageRepository.save(sentMessage);
+                    sentMessageRepository.deleteByMessageType(MSGTYPE);
+                    sentMessageRepository.save(sentMessage);
+                }
 
             } else {
                 System.out.println("Ja mandei mensagem do dia. nada farei. Id:" + LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
@@ -71,7 +72,7 @@ public class ReportTargetMissBatch {
         return elapsedMealTime > BatchConfigs.SLEEP_INTERVAL;
     }
 
-    public void SendTargetMissDayReport() {
+    public boolean SendTargetMissDayReport() {
 
         Instant yesterday = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).truncatedTo(ChronoUnit.DAYS).toInstant().minus(1, ChronoUnit.DAYS);
         System.out.println(yesterday);
@@ -126,15 +127,22 @@ public class ReportTargetMissBatch {
 
         try {
             new Sender(BatchConfigs.BOT_ID).sendResponse(153350155, message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
 
+        try {
             //chama o image report para mandar o peso
             HttpURLConnection conn = (HttpURLConnection) new URL("https://foodlogbotimagebatch.herokuapp.com/timeline").openConnection();
             conn.setRequestMethod("GET");
             BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         } catch (Exception e) {
             e.printStackTrace();
+            new Sender(BatchConfigs.BOT_ID).sendResponse(153350155, "Erro ao mandar timeline: " + e.getMessage());
         }
 
+        return true;
     }
 
     private int getScheduledMeals() {

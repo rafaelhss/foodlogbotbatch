@@ -38,8 +38,8 @@ public class FoodLogBotBatch implements CommandLineRunner {
 	@Override
 	@Transactional
 	public void run(String... args) {
-		scheduledMealBatch.run();
-		reportElapsedMealTimeBatch.run();
+		//scheduledMealBatch.run();
+		//reportElapsedMealTimeBatch.run();
 		reportTargetMissBatch.run();
 	}
 
