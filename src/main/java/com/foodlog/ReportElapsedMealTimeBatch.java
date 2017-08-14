@@ -88,7 +88,7 @@ public class ReportElapsedMealTimeBatch {
 
         String mensagem = "Verificando se eh hora de dormir. midnightOfLastMeal:" + midnightOfLastMeal + "  ZonedDateTime.now(ZoneId.of(\"America/Sao_Paulo\")):" + ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")) + " isNowSleepTime? --> " + ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).isAfter(midnightOfLastMeal);
         System.out.println(mensagem);
-        new Sender(BatchConfigs.BOT_ID).sendResponse(153350155, mensagem);
+        //new Sender(BatchConfigs.BOT_ID).sendResponse(153350155, mensagem);
 
         return ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).isAfter(midnightOfLastMeal);
     }
