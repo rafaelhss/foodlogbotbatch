@@ -7,6 +7,10 @@ import com.foodlog.scheduledmeal.ScheduledMealRepository;
 import com.foodlog.sender.Sender;
 import com.foodlog.sender.sentmessage.SentMessage;
 import com.foodlog.sender.sentmessage.SentMessageRepository;
+import com.foodlog.user.User;
+import com.foodlog.user.UserRepository;
+import com.foodlog.user.UserTelegram;
+import com.foodlog.user.UserTelegramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,52 +37,64 @@ public class ReportElapsedMealTimeBatch {
     @Autowired
     SentMessageRepository sentMessageRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    UserTelegramRepository userTelegramRepository;
+
 
     public void run(){
 
-        MealLog mealLog = mealLogRepository.findTop1ByOrderByMealDateTimeDesc();
-        long elapsedMealTime = Duration.between(mealLog.getMealDateTime(), Instant.now()).getSeconds() / (60 * 60);
+        for(User currentUser : userRepository.findAll()) {
 
-        String message;
+            MealLog mealLog = mealLogRepository.findTop1ByUserOrderByMealDateTimeDesc(currentUser);
+            if(mealLog != null) {
+                long elapsedMealTime = Duration.between(mealLog.getMealDateTime(), Instant.now()).getSeconds() / (60 * 60);
 
-        System.out.println(mealLog.getMealDateTime());
-        System.out.println(Instant.now());
 
-        // ElapsedMealTime eh sempre um numero redondo. A segunda condição evita que envie mensagem duplicada.
-        if( elapsedMealTime >= 3 &&
-            sentMessageRepository.findBySentIdAndMessageType(elapsedMealTime, MSGTYPE) == null &&
-            !isNowSleepTime(mealLog)){
-            message = "Hora de comer! Sua ultima refeição ";
+                String message;
 
-            if(mealLog.getScheduledMeal() != null){
-                message += "(" + mealLog.getScheduledMeal().getName() + ") ";
+                System.out.println(mealLog.getMealDateTime());
+                System.out.println(Instant.now());
+
+                Long sentMessageId = elapsedMealTime + currentUser.getId();
+
+                // ElapsedMealTime eh sempre um numero redondo. A segunda condição evita que envie mensagem duplicada.
+                if (elapsedMealTime >= 3 &&
+                        sentMessageRepository.findBySentIdAndMessageType(sentMessageId, MSGTYPE) == null &&
+                        !isNowSleepTime(mealLog)) {
+                    message = "Hora de comer! Sua ultima refeição ";
+
+                    if (mealLog.getScheduledMeal() != null) {
+                        message += "(" + mealLog.getScheduledMeal().getName() + ") ";
+                    }
+
+                    message += "ocorreu há " + elapsedMealTime + " horas";
+
+
+                    UserTelegram user = userTelegramRepository.findByUser(currentUser);
+                    new Sender(BatchConfigs.BOT_ID).sendResponse(user.getTelegramId(), message);
+
+                    //Log Message
+                    SentMessage sentMessage = new SentMessage();
+                    sentMessage.setSentDate(new Date());
+                    sentMessage.setMessageType(MSGTYPE);
+                    sentMessage.setSentId(sentMessageId);
+
+                    sentMessageRepository.deleteByMessageType(MSGTYPE);
+                    sentMessageRepository.save(sentMessage);
+
+                } else {
+                    message = "ta de boa: elapsedMealTime >= 3 (" +
+                            (elapsedMealTime >= 3) + ")" +
+                            "sentMessageRepository.findBySentIdAndMessageType(elapsedMealTime, MSGTYPE) == null" +
+                            (sentMessageRepository.findBySentIdAndMessageType(sentMessageId, MSGTYPE) == null);
+                }
+
+                System.out.println(message);
             }
-
-            message += "ocorreu há " + elapsedMealTime + " horas";
-
-
-            new Sender(BatchConfigs.BOT_ID).sendResponse(153350155, message);
-
-            //Log Message
-            SentMessage sentMessage = new SentMessage();
-            sentMessage.setSentDate(new Date());
-            sentMessage.setMessageType(MSGTYPE);
-            sentMessage.setSentId(elapsedMealTime);
-
-            sentMessageRepository.deleteByMessageType(MSGTYPE);
-            sentMessageRepository.save(sentMessage);
-
-        } else {
-            message = "ta de boa: elapsedMealTime >= 3 (" +
-                    (elapsedMealTime >= 3) + ")" +
-                    "sentMessageRepository.findBySentIdAndMessageType(elapsedMealTime, MSGTYPE) == null" +
-                    (sentMessageRepository.findBySentIdAndMessageType(elapsedMealTime, MSGTYPE) == null);
         }
-
-        System.out.println(message);
-
-
-
 
     }
 

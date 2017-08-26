@@ -1,5 +1,6 @@
 package com.foodlog.meallog;
 
+import com.foodlog.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,6 +18,8 @@ import java.util.List;
 @SuppressWarnings("unused")
 @Repository
 public interface MealLogRepository extends JpaRepository<MealLog,Long> {
-    MealLog findTop1ByOrderByMealDateTimeDesc();
-    List<MealLog> findByMealDateTimeBetweenOrderByMealDateTimeDesc(Instant today, Instant tomorrow);
+
+    MealLog findTop1ByUserOrderByMealDateTimeDesc(User currentUser);
+
+    List<MealLog> findByUserAndMealDateTimeBetweenOrderByMealDateTimeDesc(User currentUser, Instant yesterday, Instant tomorrow);
 }

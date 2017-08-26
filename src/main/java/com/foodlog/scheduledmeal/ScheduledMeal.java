@@ -1,7 +1,11 @@
 package com.foodlog.scheduledmeal;
 
+
+import com.foodlog.user.User;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -28,11 +32,12 @@ public class ScheduledMeal implements Serializable {
     private String description;
 
     @NotNull
+    @Pattern(regexp = "^((?:[01]\\d|2[0-3]):[0-5]\\d$)")
     @Column(name = "target_time", nullable = false)
     private String targetTime;
 
     @ManyToOne
-    private Client client;
+    private User user;
 
     public Long getId() {
         return id;
@@ -72,8 +77,8 @@ public class ScheduledMeal implements Serializable {
         return targetTime;
     }
 
-    public ScheduledMeal target_time(String target_time) {
-        this.targetTime = target_time;
+    public ScheduledMeal targetTime(String targetTime) {
+        this.targetTime = targetTime;
         return this;
     }
 
@@ -81,17 +86,17 @@ public class ScheduledMeal implements Serializable {
         this.targetTime = targetTime;
     }
 
-    public Client getClient() {
-        return client;
+    public User getUser() {
+        return user;
     }
 
-    public ScheduledMeal client(Client client) {
-        this.client = client;
+    public ScheduledMeal user(User user) {
+        this.user = user;
         return this;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
@@ -117,10 +122,10 @@ public class ScheduledMeal implements Serializable {
     @Override
     public String toString() {
         return "ScheduledMeal{" +
-                "id=" + getId() +
-                ", name='" + getName() + "'" +
-                ", description='" + getDescription() + "'" +
-                ", targetTime='" + getTargetTime() + "'" +
-                "}";
+            "id=" + getId() +
+            ", name='" + getName() + "'" +
+            ", description='" + getDescription() + "'" +
+            ", targetTime='" + getTargetTime() + "'" +
+            "}";
     }
 }

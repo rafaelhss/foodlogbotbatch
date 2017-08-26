@@ -2,6 +2,7 @@ package com.foodlog.meallog;
 
 
 import com.foodlog.scheduledmeal.ScheduledMeal;
+import com.foodlog.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -23,6 +24,9 @@ public class MealLog implements Serializable {
     @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
+    @Transient
+    private byte[] photo;
+
     @Column(name = "photo_content_type", nullable = false)
     private String photoContentType;
 
@@ -33,8 +37,14 @@ public class MealLog implements Serializable {
     @Column(name = "jhi_comment")
     private String comment;
 
+    @Column(name = "update_id")
+    private Long updateId;
+
     @ManyToOne
     private ScheduledMeal scheduledMeal;
+
+    @ManyToOne
+    private User user;
 
     public Long getId() {
         return id;
@@ -42,6 +52,19 @@ public class MealLog implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public MealLog photo(byte[] photo) {
+        this.photo = photo;
+        return this;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
     }
 
     public String getPhotoContentType() {
@@ -83,6 +106,19 @@ public class MealLog implements Serializable {
         this.comment = comment;
     }
 
+    public Long getUpdateId() {
+        return updateId;
+    }
+
+    public MealLog updateId(Long updateId) {
+        this.updateId = updateId;
+        return this;
+    }
+
+    public void setUpdateId(Long updateId) {
+        this.updateId = updateId;
+    }
+
     public ScheduledMeal getScheduledMeal() {
         return scheduledMeal;
     }
@@ -94,6 +130,19 @@ public class MealLog implements Serializable {
 
     public void setScheduledMeal(ScheduledMeal scheduledMeal) {
         this.scheduledMeal = scheduledMeal;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public MealLog user(User user) {
+        this.user = user;
+        return this;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
@@ -120,9 +169,11 @@ public class MealLog implements Serializable {
     public String toString() {
         return "MealLog{" +
             "id=" + getId() +
+            ", photo='" + getPhoto() + "'" +
             ", photoContentType='" + photoContentType + "'" +
             ", mealDateTime='" + getMealDateTime() + "'" +
             ", comment='" + getComment() + "'" +
+            ", updateId='" + getUpdateId() + "'" +
             "}";
     }
 }

@@ -7,6 +7,10 @@ import com.foodlog.scheduledmeal.ScheduledMealRepository;
 import com.foodlog.sender.Sender;
 import com.foodlog.sender.sentmessage.SentMessage;
 import com.foodlog.sender.sentmessage.SentMessageRepository;
+import com.foodlog.user.User;
+import com.foodlog.user.UserRepository;
+import com.foodlog.user.UserTelegram;
+import com.foodlog.user.UserTelegramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,40 +43,52 @@ public class ReportTargetMissBatch {
     @Autowired
     private SentMessageRepository sentMessageRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    UserTelegramRepository userTelegramRepository;
+
     public void run() {
 
         //TODO rever esse controle de mensages enviada
+        for(User currentUser : userRepository.findAll()) {
 
-        if(isTimeToSendReport()){
-            if(sentMessageRepository.findBySentIdAndMessageType(LocalDate.now().getLong(ChronoField.DAY_OF_YEAR), MSGTYPE) == null) {
-                System.out.println("Vou mandar msg: " + LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
-                if(SendTargetMissDayReport()) {
+            if (isTimeToSendReport(currentUser)) {
+                long sentMessageId = LocalDate.now().getLong(ChronoField.DAY_OF_YEAR) + currentUser.getId();
+                if (sentMessageRepository.findBySentIdAndMessageType(sentMessageId, MSGTYPE) == null) {
+                    System.out.println("Vou mandar msg: " + sentMessageId);
+                    if (SendTargetMissDayReport(currentUser)) {
 
-                    //Log Message
-                    SentMessage sentMessage = new SentMessage();
-                    sentMessage.setSentDate(new Date());
-                    sentMessage.setMessageType(MSGTYPE);
-                    sentMessage.setSentId(LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
+                        //Log Message
+                        SentMessage sentMessage = new SentMessage();
+                        sentMessage.setSentDate(new Date());
+                        sentMessage.setMessageType(MSGTYPE);
+                        sentMessage.setSentId(sentMessageId);
 
-                    sentMessageRepository.deleteByMessageType(MSGTYPE);
-                    sentMessageRepository.save(sentMessage);
+                        sentMessageRepository.deleteByMessageType(MSGTYPE);
+                        sentMessageRepository.save(sentMessage);
+                    }
+
+                } else {
+                    System.out.println("Ja mandei mensagem do dia. nada farei. Id:" + sentMessageId);
                 }
-
             } else {
-                System.out.println("Ja mandei mensagem do dia. nada farei. Id:" + LocalDate.now().getLong(ChronoField.DAY_OF_YEAR));
+                System.out.println("It is not time yet");
             }
-        } else {
-            System.out.println("It is not time yet");
         }
     }
 
-    private boolean isTimeToSendReport() {
-        MealLog mealLog = mealLogRepository.findTop1ByOrderByMealDateTimeDesc();
+    private boolean isTimeToSendReport(User currentUser) {
+        MealLog mealLog = mealLogRepository.findTop1ByUserOrderByMealDateTimeDesc(currentUser);
+        if(mealLog == null) {
+            return false;
+        }
         long elapsedMealTime = Duration.between(mealLog.getMealDateTime(), Instant.now()).getSeconds() / (60 * 60);
         return elapsedMealTime > BatchConfigs.SLEEP_INTERVAL;
     }
 
-    public boolean SendTargetMissDayReport() {
+    public boolean SendTargetMissDayReport(User currentUser) {
 
         Instant yesterday = ZonedDateTime.now(ZoneId.of("America/Sao_Paulo")).truncatedTo(ChronoUnit.DAYS).toInstant().minus(1, ChronoUnit.DAYS);
         System.out.println(yesterday);
@@ -82,12 +98,12 @@ public class ReportTargetMissBatch {
 
         System.out.println("yesterday.getEpochSecond(): " + yesterday.getEpochSecond());
 
-        int expected = getScheduledMeals();
+        int expected = getScheduledMeals(currentUser);
         int hit = 0;
         int miss = 0;
 
         MealLog lastProcessed = null;
-        for (MealLog mealLog : mealLogRepository.findByMealDateTimeBetweenOrderByMealDateTimeDesc(yesterday, tomorrow)) {
+        for (MealLog mealLog : mealLogRepository.findByUserAndMealDateTimeBetweenOrderByMealDateTimeDesc(currentUser,yesterday, tomorrow)) {
             System.out.println(mealLog.getId() + " " + mealLog.getMealDateTime() + "     " + mealLog.getMealDateTime().atZone(ZoneId.of("America/Sao_Paulo")));
 
             if(lastProcessed == null){
@@ -126,7 +142,8 @@ public class ReportTargetMissBatch {
         System.out.println(message);
 
         try {
-            new Sender(BatchConfigs.BOT_ID).sendResponse(153350155, message);
+            UserTelegram user = userTelegramRepository.findByUser(currentUser);
+            new Sender(BatchConfigs.BOT_ID).sendResponse(user.getTelegramId(), message);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -145,11 +162,11 @@ public class ReportTargetMissBatch {
         return true;
     }
 
-    private int getScheduledMeals() {
+    private int getScheduledMeals(User currentUser) {
 
         HashMap<String,String> aux = new HashMap<>();
         int count = 0;
-        for(ScheduledMeal scheduledMeal:scheduledMealRepository.findAll()){
+        for(ScheduledMeal scheduledMeal:scheduledMealRepository.findByUser(currentUser)){
             if (aux.get(scheduledMeal.getTargetTime()) == null){
                 aux.put(scheduledMeal.getTargetTime(),scheduledMeal.getTargetTime());
                 count++;

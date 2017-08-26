@@ -6,6 +6,9 @@ import com.foodlog.scheduledmeal.ScheduledMealRepository;
 import com.foodlog.sender.Sender;
 import com.foodlog.sender.sentmessage.SentMessage;
 import com.foodlog.sender.sentmessage.SentMessageRepository;
+import com.foodlog.user.User;
+import com.foodlog.user.UserTelegram;
+import com.foodlog.user.UserTelegramRepository;
 import org.joda.time.DateTimeComparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +35,9 @@ public class ScheduledMealBatch {
     @Autowired
     SentMessageRepository sentMessageRepository;
 
+    @Autowired
+    UserTelegramRepository userTelegramRepository;
+
 
     public void run(){
         System.out.println("########## here we gooooooo  :" + new Date());
@@ -46,18 +52,24 @@ public class ScheduledMealBatch {
                 System.out.println("Verificando:" + scheduledMeal.getName() + "(" + scheduledMeal.getTargetTime() + ")");
                 if(checkTime(scheduledMeal)) {
 
-                    SentMessage sentMessage = sentMessageRepository.findBySentId(scheduledMeal.getId());
+
+                    Long sentMessageId = scheduledMeal.getId();
+                    if(scheduledMeal.getUser() != null){
+                        sentMessageId += scheduledMeal.getUser().getId();
+                    }
+                    SentMessage sentMessage = sentMessageRepository.findBySentId(sentMessageId);
 
                     if(sentMessage == null) {
 
-                        new Sender(BatchConfigs.BOT_ID).sendResponse(153350155, scheduledMeal.getName()
+                        UserTelegram user = userTelegramRepository.findByUser(scheduledMeal.getUser());
+                        new Sender(BatchConfigs.BOT_ID).sendResponse(user.getTelegramId(), scheduledMeal.getName()
                                 + "(" + scheduledMeal.getTargetTime() + "):   "
                                 + scheduledMeal.getDescription());
 
                         //Log Message
                         sentMessage = new SentMessage();
                         sentMessage.setSentDate(new Date());
-                        sentMessage.setSentId(scheduledMeal.getId());
+                        sentMessage.setSentId(sentMessageId);
                         sentMessageRepository.save(sentMessage);
                     } else {
                         System.out.println("Não vou mandar mensagem apesar de estarmos na janela. ja mandei: " + sentMessage.getSentId() + " - " + sentMessage.getSentId() + " em " + sentMessage.getSentDate());
