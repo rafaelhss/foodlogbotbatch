@@ -151,7 +151,7 @@ public class ReportTargetMissBatch {
 
         try {
             //chama o image report para mandar o peso
-            HttpURLConnection conn = (HttpURLConnection) new URL("https://foodlogbotimagebatch.herokuapp.com/timeline?userid=" + currentUser.getId()  ).openConnection();
+            HttpURLConnection conn = (HttpURLConnection) new URL("https://foodlogbotimagebatch.herokuapp.com/timeline?userid=" + currentUser.getId()).openConnection();
             conn.setRequestMethod("GET");
             BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         } catch (Exception e) {
