@@ -38,7 +38,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 	@Override
 	@Transactional
 	public void run(String... args) {
-
+/*
 
 		System.out.println("########## Start scheduledMealBatch");
 		System.out.println("########## Start scheduledMealBatch");
@@ -53,7 +53,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 		System.out.println("########## End scheduledMealBatch");
 
 		System.out.println("");
-
+*/
 		System.out.println("########## Start reportElapsedMealTimeBatch");
 		System.out.println("########## Start reportElapsedMealTimeBatch");
 		System.out.println("########## Start reportElapsedMealTimeBatch");
@@ -65,7 +65,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 		System.out.println("########## End reportElapsedMealTimeBatch");
 		System.out.println("########## End reportElapsedMealTimeBatch");
 		System.out.println("########## End reportElapsedMealTimeBatch");
-
+/*
 		System.out.println("");
 
 		System.out.println("########## Start reportTargetMissBatch");
@@ -80,6 +80,7 @@ public class FoodLogBotBatch implements CommandLineRunner {
 		System.out.println("########## End reportTargetMissBatch");
 		System.out.println("########## End reportTargetMissBatch");
 		System.out.println("########## End reportTargetMissBatch");
+		*/
 	}
 
 
